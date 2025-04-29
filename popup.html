@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Birb Gogh</title>
+  <style>
+    body {
+      width: 320px;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f5f5f5;
+    }
+    h2 {
+      margin: 0 0 20px 0;
+      color: #333;
+      font-size: 1.5em;
+    }
+    .color-group {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .color-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #333;
+      font-size: 0.9em;
+    }
+    .color-input-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .color-input {
+      width: 50px;
+      height: 50px;
+      padding: 0;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .color-value {
+      font-family: monospace;
+      font-size: 0.8em;
+      color: #666;
+      margin-top: 5px;
+    }
+    .color-group:hover {
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    .button-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .apply-button {
+      width: 100%;
+      padding: 10px;
+      background-color: #000000;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.2s ease;
+    }
+    .apply-button:hover {
+      background-color: #333333;
+    }
+    .reset-button {
+      width: 100%;
+      padding: 8px;
+      background-color: #f5f5f5;
+      color: #666;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.9em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+    .reset-button:hover {
+      background-color: #e5e5e5;
+      color: #333;
+    }
+    .reset-button-icon {
+      font-size: 1.1em;
+    }
+    .section-title {
+      font-size: 1.1em;
+      font-weight: 600;
+      color: #333;
+      margin: 20px 0 10px 0;
+    }
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .color-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .color-item .color-label {
+      margin-bottom: 5px;
+    }
+    .color-item .color-value {
+      margin-top: 5px;
+    }
+    .hex-input {
+      font-family: monospace;
+      font-size: 0.8em;
+      width: 70px;
+      padding: 2px 4px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      text-align: center;
+      margin-top: 5px;
+    }
+    .hex-input:focus {
+      outline: none;
+      border-color: #00809D;
+    }
+    .color-display {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="button-group">
+    <button class="apply-button" id="apply-colors">Apply Colors</button>
+    <button class="reset-button" id="refresh-colors">
+      <span class="reset-button-icon">↻</span>
+      <span>Go back to default colors</span>
+    </button>
+  </div>
+  
+  <h2>Birb Gogh</h2>
+  
+  <div class="section-title">Primary Colors</div>
+  <div class="color-grid">
+    <div class="color-item">
+      <label class="color-label">Primary</label>
+      <div class="color-display">
+        <input type="color" id="primary-color" class="color-input" value="#00809D">
+        <input type="text" class="hex-input" id="primary-hex" value="#00809D" maxlength="7">
+      </div>
+    </div>
+
+    <div class="color-item">
+      <label class="color-label">Primary Dark</label>
+      <div class="color-display">
+        <input type="color" id="primary-dark-color" class="color-input" value="#024251">
+        <input type="text" class="hex-input" id="primary-dark-hex" value="#024251" maxlength="7">
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">CTA Colors</div>
+  <div class="color-grid">
+    <div class="color-item">
+      <label class="color-label">CTA</label>
+      <div class="color-display">
+        <input type="color" id="cta-color" class="color-input" value="#ff6064">
+        <input type="text" class="hex-input" id="cta-hex" value="#ff6064" maxlength="7">
+      </div>
+    </div>
+
+    <div class="color-item">
+      <label class="color-label">CTA Active</label>
+      <div class="color-display">
+        <input type="color" id="cta-active-color" class="color-input" value="#ff3a3d">
+        <input type="text" class="hex-input" id="cta-active-hex" value="#ff3a3d" maxlength="7">
+      </div>
+    </div>
+
+    <div class="color-item">
+      <label class="color-label">CTA Hover</label>
+      <div class="color-display">
+        <input type="color" id="cta-hover-color" class="color-input" value="#024251">
+        <input type="text" class="hex-input" id="cta-hover-hex" value="#024251" maxlength="7">
+      </div>
+    </div>
+
+    <div class="color-item">
+      <label class="color-label">CTA Text</label>
+      <div class="color-display">
+        <input type="color" id="cta-text-color" class="color-input" value="#FFFFFF">
+        <input type="text" class="hex-input" id="cta-text-hex" value="#FFFFFF" maxlength="7">
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Status Colors</div>
+  <div class="color-grid">
+    <div class="color-item">
+      <label class="color-label">Error</label>
+      <div class="color-display">
+        <input type="color" id="error-color" class="color-input" value="#d73900">
+        <input type="text" class="hex-input" id="error-hex" value="#d73900" maxlength="7">
+      </div>
+    </div>
+
+    <div class="color-item">
+      <label class="color-label">Confirmation</label>
+      <div class="color-display">
+        <input type="color" id="confirmation-green-color" class="color-input" value="#038600">
+        <input type="text" class="hex-input" id="confirmation-green-hex" value="#038600" maxlength="7">
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html> 

@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Birb Gogh",
+  "version": "1.0",
+  "description": "A tool to easily modify CSS color variables on websites",
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "permissions": ["activeTab", "scripting", "storage"],
+  "host_permissions": [
+    "*://*.holidu.com/*",
+    "*://holidu.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.holidu.com/*",
+        "*://holidu.com/*"
+      ],
+      "js": ["content.js"]
+    }
+  ]
+} 
