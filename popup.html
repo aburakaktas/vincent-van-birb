@@ -186,6 +186,37 @@
       align-items: center;
       gap: 5px;
     }
+    .contrast-info {
+      margin-top: 10px;
+      font-size: 0.8em;
+      color: #666;
+    }
+    .contrast-scenario {
+      margin-bottom: 10px;
+      padding: 8px;
+      background: #f8f8f8;
+      border-radius: 4px;
+    }
+    .scenario-title {
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: #333;
+    }
+    .contrast-ratio {
+      margin-bottom: 5px;
+    }
+    .wcag-status {
+      display: flex;
+      gap: 10px;
+    }
+    .wcag-level {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+    }
+    .status {
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
@@ -212,6 +243,13 @@
         <div class="color-display">
           <input type="color" id="primary-color" class="color-input" value="#00809D">
           <input type="text" class="hex-input" id="primary-hex" value="#00809D" maxlength="7">
+          <div class="contrast-info" id="primary-contrast">
+            <div class="contrast-ratio">Contrast Ratio: <span>0</span></div>
+            <div class="wcag-status">
+              <div class="wcag-level">AA: <span class="status">-</span></div>
+              <div class="wcag-level">AAA: <span class="status">-</span></div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -220,6 +258,13 @@
         <div class="color-display">
           <input type="color" id="primary-dark-color" class="color-input" value="#024251">
           <input type="text" class="hex-input" id="primary-dark-hex" value="#024251" maxlength="7">
+          <div class="contrast-info" id="primary-dark-contrast">
+            <div class="contrast-ratio">Contrast Ratio: <span>0</span></div>
+            <div class="wcag-status">
+              <div class="wcag-level">AA: <span class="status">-</span></div>
+              <div class="wcag-level">AAA: <span class="status">-</span></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -231,6 +276,13 @@
         <div class="color-display">
           <input type="color" id="cta-color" class="color-input" value="#ff6064">
           <input type="text" class="hex-input" id="cta-hex" value="#ff6064" maxlength="7">
+          <div class="contrast-info" id="cta-contrast">
+            <div class="contrast-ratio">Contrast Ratio: <span>0</span></div>
+            <div class="wcag-status">
+              <div class="wcag-level">AA: <span class="status">-</span></div>
+              <div class="wcag-level">AAA: <span class="status">-</span></div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -239,6 +291,13 @@
         <div class="color-display">
           <input type="color" id="cta-active-color" class="color-input" value="#ff3a3d">
           <input type="text" class="hex-input" id="cta-active-hex" value="#ff3a3d" maxlength="7">
+          <div class="contrast-info" id="cta-active-contrast">
+            <div class="contrast-ratio">Contrast Ratio: <span>0</span></div>
+            <div class="wcag-status">
+              <div class="wcag-level">AA: <span class="status">-</span></div>
+              <div class="wcag-level">AAA: <span class="status">-</span></div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -247,6 +306,13 @@
         <div class="color-display">
           <input type="color" id="cta-hover-color" class="color-input" value="#024251">
           <input type="text" class="hex-input" id="cta-hover-hex" value="#024251" maxlength="7">
+          <div class="contrast-info" id="cta-hover-contrast">
+            <div class="contrast-ratio">Contrast Ratio: <span>0</span></div>
+            <div class="wcag-status">
+              <div class="wcag-level">AA: <span class="status">-</span></div>
+              <div class="wcag-level">AAA: <span class="status">-</span></div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -255,6 +321,13 @@
         <div class="color-display">
           <input type="color" id="cta-text-color" class="color-input" value="#FFFFFF">
           <input type="text" class="hex-input" id="cta-text-hex" value="#FFFFFF" maxlength="7">
+          <div class="contrast-info" id="cta-text-contrast">
+            <div class="contrast-ratio">Contrast Ratio: <span>0</span></div>
+            <div class="wcag-status">
+              <div class="wcag-level">AA: <span class="status">-</span></div>
+              <div class="wcag-level">AAA: <span class="status">-</span></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -266,6 +339,13 @@
         <div class="color-display">
           <input type="color" id="error-color" class="color-input" value="#d73900">
           <input type="text" class="hex-input" id="error-hex" value="#d73900" maxlength="7">
+          <div class="contrast-info" id="error-contrast">
+            <div class="contrast-ratio">Contrast Ratio: <span>0</span></div>
+            <div class="wcag-status">
+              <div class="wcag-level">AA: <span class="status">-</span></div>
+              <div class="wcag-level">AAA: <span class="status">-</span></div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -274,6 +354,13 @@
         <div class="color-display">
           <input type="color" id="confirmation-green-color" class="color-input" value="#038600">
           <input type="text" class="hex-input" id="confirmation-green-hex" value="#038600" maxlength="7">
+          <div class="contrast-info" id="confirmation-green-contrast">
+            <div class="contrast-ratio">Contrast Ratio: <span>0</span></div>
+            <div class="wcag-status">
+              <div class="wcag-level">AA: <span class="status">-</span></div>
+              <div class="wcag-level">AAA: <span class="status">-</span></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
