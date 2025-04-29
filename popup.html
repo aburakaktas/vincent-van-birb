@@ -5,10 +5,60 @@
   <style>
     body {
       width: 320px;
-      padding: 20px;
+      padding: 0;
+      margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background-color: #f5f5f5;
     }
+
+    .header {
+      position: sticky;
+      top: 0;
+      background-color: white;
+      padding: 15px 20px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 100;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .header img {
+      width: 32px;
+      height: 32px;
+    }
+
+    .header h2 {
+      margin: 0;
+      color: #333;
+      font-size: 1.5em;
+    }
+
+    .main-content {
+      padding: 20px;
+    }
+
+    .footer {
+      padding: 15px 20px;
+      border-top: 1px solid #eee;
+      text-align: center;
+    }
+
+    .footer a {
+      color: #00809D;
+      text-decoration: none;
+      font-size: 0.9em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
     h2 {
       margin: 0 0 20px 0;
       color: #333;
@@ -139,87 +189,103 @@
   </style>
 </head>
 <body>
-  <div class="button-group">
-    <button class="apply-button" id="apply-colors">Apply Colors</button>
-    <button class="reset-button" id="refresh-colors">
-      <span class="reset-button-icon">↻</span>
-      <span>Go back to default colors</span>
-    </button>
-  </div>
-  
-  <h2>Birb Gogh</h2>
-  
-  <div class="section-title">Primary Colors</div>
-  <div class="color-grid">
-    <div class="color-item">
-      <label class="color-label">Primary</label>
-      <div class="color-display">
-        <input type="color" id="primary-color" class="color-input" value="#00809D">
-        <input type="text" class="hex-input" id="primary-hex" value="#00809D" maxlength="7">
-      </div>
-    </div>
-
-    <div class="color-item">
-      <label class="color-label">Primary Dark</label>
-      <div class="color-display">
-        <input type="color" id="primary-dark-color" class="color-input" value="#024251">
-        <input type="text" class="hex-input" id="primary-dark-hex" value="#024251" maxlength="7">
-      </div>
-    </div>
+  <div class="header">
+    <img src="icon48.png" alt="Birb Gogh Logo">
+    <h2>Birb Gogh</h2>
   </div>
 
-  <div class="section-title">CTA Colors</div>
-  <div class="color-grid">
-    <div class="color-item">
-      <label class="color-label">CTA</label>
-      <div class="color-display">
-        <input type="color" id="cta-color" class="color-input" value="#ff6064">
-        <input type="text" class="hex-input" id="cta-hex" value="#ff6064" maxlength="7">
+  <div class="main-content">
+    <div class="button-group">
+      <button class="apply-button" id="apply-colors">Apply Colors</button>
+      <button class="reset-button" id="refresh-colors">
+        <span class="reset-button-icon">↻</span>
+        <span>Go back to default colors</span>
+      </button>
+    </div>
+    
+    <h2>Birb Gogh</h2>
+    
+    <div class="section-title">Primary Colors</div>
+    <div class="color-grid">
+      <div class="color-item">
+        <label class="color-label">Primary</label>
+        <div class="color-display">
+          <input type="color" id="primary-color" class="color-input" value="#00809D">
+          <input type="text" class="hex-input" id="primary-hex" value="#00809D" maxlength="7">
+        </div>
+      </div>
+
+      <div class="color-item">
+        <label class="color-label">Primary Dark</label>
+        <div class="color-display">
+          <input type="color" id="primary-dark-color" class="color-input" value="#024251">
+          <input type="text" class="hex-input" id="primary-dark-hex" value="#024251" maxlength="7">
+        </div>
       </div>
     </div>
 
-    <div class="color-item">
-      <label class="color-label">CTA Active</label>
-      <div class="color-display">
-        <input type="color" id="cta-active-color" class="color-input" value="#ff3a3d">
-        <input type="text" class="hex-input" id="cta-active-hex" value="#ff3a3d" maxlength="7">
+    <div class="section-title">CTA Colors</div>
+    <div class="color-grid">
+      <div class="color-item">
+        <label class="color-label">CTA</label>
+        <div class="color-display">
+          <input type="color" id="cta-color" class="color-input" value="#ff6064">
+          <input type="text" class="hex-input" id="cta-hex" value="#ff6064" maxlength="7">
+        </div>
+      </div>
+
+      <div class="color-item">
+        <label class="color-label">CTA Active</label>
+        <div class="color-display">
+          <input type="color" id="cta-active-color" class="color-input" value="#ff3a3d">
+          <input type="text" class="hex-input" id="cta-active-hex" value="#ff3a3d" maxlength="7">
+        </div>
+      </div>
+
+      <div class="color-item">
+        <label class="color-label">CTA Hover</label>
+        <div class="color-display">
+          <input type="color" id="cta-hover-color" class="color-input" value="#024251">
+          <input type="text" class="hex-input" id="cta-hover-hex" value="#024251" maxlength="7">
+        </div>
+      </div>
+
+      <div class="color-item">
+        <label class="color-label">CTA Text</label>
+        <div class="color-display">
+          <input type="color" id="cta-text-color" class="color-input" value="#FFFFFF">
+          <input type="text" class="hex-input" id="cta-text-hex" value="#FFFFFF" maxlength="7">
+        </div>
       </div>
     </div>
 
-    <div class="color-item">
-      <label class="color-label">CTA Hover</label>
-      <div class="color-display">
-        <input type="color" id="cta-hover-color" class="color-input" value="#024251">
-        <input type="text" class="hex-input" id="cta-hover-hex" value="#024251" maxlength="7">
+    <div class="section-title">Status Colors</div>
+    <div class="color-grid">
+      <div class="color-item">
+        <label class="color-label">Error</label>
+        <div class="color-display">
+          <input type="color" id="error-color" class="color-input" value="#d73900">
+          <input type="text" class="hex-input" id="error-hex" value="#d73900" maxlength="7">
+        </div>
       </div>
-    </div>
 
-    <div class="color-item">
-      <label class="color-label">CTA Text</label>
-      <div class="color-display">
-        <input type="color" id="cta-text-color" class="color-input" value="#FFFFFF">
-        <input type="text" class="hex-input" id="cta-text-hex" value="#FFFFFF" maxlength="7">
+      <div class="color-item">
+        <label class="color-label">Confirmation</label>
+        <div class="color-display">
+          <input type="color" id="confirmation-green-color" class="color-input" value="#038600">
+          <input type="text" class="hex-input" id="confirmation-green-hex" value="#038600" maxlength="7">
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="section-title">Status Colors</div>
-  <div class="color-grid">
-    <div class="color-item">
-      <label class="color-label">Error</label>
-      <div class="color-display">
-        <input type="color" id="error-color" class="color-input" value="#d73900">
-        <input type="text" class="hex-input" id="error-hex" value="#d73900" maxlength="7">
-      </div>
-    </div>
-
-    <div class="color-item">
-      <label class="color-label">Confirmation</label>
-      <div class="color-display">
-        <input type="color" id="confirmation-green-color" class="color-input" value="#038600">
-        <input type="text" class="hex-input" id="confirmation-green-hex" value="#038600" maxlength="7">
-      </div>
-    </div>
+  <div class="footer">
+    <a href="https://github.com/yourusername/birb-gogh#readme" target="_blank">
+      <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor">
+        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+      </svg>
+      How to use?
+    </a>
   </div>
 
   <script src="popup.js"></script>
