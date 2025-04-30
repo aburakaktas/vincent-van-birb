@@ -1,0 +1,26 @@
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Optional: node_modules (if you use any npm packages or tooling)
+node_modules/
+
+# Build/packaged extension output
+dist/
+build/
+*.crx
+*.zip
+
+# Chrome extension private key (used when packaging)
+*.pem
+
+# Editor/IDE settings
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace

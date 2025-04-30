@@ -4,7 +4,7 @@
   <title>Birb Gogh</title>
   <style>
     body {
-      width: 320px;
+      width: 400px;
       padding: 0;
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -27,22 +27,87 @@
     .header img {
       width: 32px;
       height: 32px;
+      flex-shrink: 0;
     }
 
     .header h2 {
       margin: 0;
       color: #333;
       font-size: 1.5em;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .header-quote {
+      margin-left: auto;
+      font-size: 0.85em;
+      color: #666;
+      font-style: italic;
+      text-align: right;
+      max-width: 180px;
+      flex: 1;
+      padding-left: 20px;
+      white-space: normal;
+      line-height: 1.3;
+      overflow: hidden;
+      word-wrap: break-word;
+      hyphens: auto;
     }
 
     .main-content {
       padding: 20px;
+      padding-bottom: 80px; /* Add padding to prevent content from being hidden behind footer */
     }
 
     .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: white;
       padding: 15px 20px;
       border-top: 1px solid #eee;
-      text-align: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
+    }
+
+    .footer-buttons {
+      display: flex;
+      gap: 12px;
+      margin-left: auto;
+    }
+
+    .apply-button {
+      padding: 8px 16px;
+      background-color: #000000;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.2s ease;
+    }
+
+    .reset-button {
+      padding: 8px 16px;
+      background-color: #f5f5f5;
+      color: #666;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .reset-button-icon {
+      font-size: 1.1em;
     }
 
     .footer a {
@@ -51,7 +116,6 @@
       font-size: 0.9em;
       display: flex;
       align-items: center;
-      justify-content: center;
       gap: 6px;
     }
 
@@ -64,146 +128,134 @@
       color: #333;
       font-size: 1.5em;
     }
-    .color-group {
-      background: white;
-      padding: 15px;
-      border-radius: 8px;
-      margin-bottom: 15px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    .color-label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: #333;
-      font-size: 0.9em;
-    }
-    .color-input-container {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .color-input {
-      width: 50px;
-      height: 50px;
-      padding: 0;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .color-value {
-      font-family: monospace;
-      font-size: 0.8em;
-      color: #666;
-      margin-top: 5px;
-    }
-    .color-group:hover {
-      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-    }
     .button-group {
       display: flex;
       flex-direction: column;
       gap: 10px;
       margin-bottom: 20px;
     }
-    .apply-button {
-      width: 100%;
-      padding: 10px;
-      background-color: #000000;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: background-color 0.2s ease;
-    }
     .apply-button:hover {
       background-color: #333333;
-    }
-    .reset-button {
-      width: 100%;
-      padding: 8px;
-      background-color: #f5f5f5;
-      color: #666;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: 500;
-      font-size: 0.9em;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.2s ease;
     }
     .reset-button:hover {
       background-color: #e5e5e5;
       color: #333;
     }
-    .reset-button-icon {
-      font-size: 1.1em;
+    .color-group {
+      margin-bottom: 20px;
     }
-    .section-title {
+    .color-group-title {
       font-size: 1.1em;
       font-weight: 600;
       color: #333;
-      margin: 20px 0 10px 0;
-    }
-    .color-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+      margin-bottom: 10px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #eee;
     }
     .color-item {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
+      align-items: flex-start;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
     }
-    .color-item .color-label {
-      margin-bottom: 5px;
-    }
-    .color-item .color-value {
-      margin-top: 5px;
-    }
-    .hex-input {
-      font-family: monospace;
-      font-size: 0.8em;
-      width: 70px;
-      padding: 2px 4px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      text-align: center;
-      margin-top: 5px;
-    }
-    .hex-input:focus {
-      outline: none;
-      border-color: #00809D;
-    }
-    .color-display {
+    .color-picker-section {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 5px;
+      gap: 8px;
+      min-width: 100px;
+    }
+    .color-label {
+      font-weight: 600;
+      color: #333;
+      font-size: 0.9em;
+      text-align: center;
+    }
+    .color-input {
+      width: 90px;
+      height: 60px;
+      padding: 0;
+      border: 2px solid #ddd;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .color-input:hover {
+      border-color: #000000;
+    }
+    .color-input:focus {
+      outline: none;
+      border-color: #000000;
+      box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+    }
+    .color-input::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 24px;
+      height: 24px;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M14.2692 3.32639C16.0378 1.55787 18.9051 1.55787 20.6736 3.32639C22.4421 5.0949 22.4421 7.96223 20.6736 9.73075L9.13573 21.2686C8.66744 21.7369 8.03231 22 7.37005 22H4.49704C3.11796 22 2 20.882 2 19.503V16.6299C2 15.9677 2.26308 15.3326 2.73137 14.8643L14.2692 3.32639ZM19.2594 4.7406C18.2719 3.75313 16.6709 3.75313 15.6835 4.7406L15.3925 5.03152L18.9685 8.60746L19.2594 8.31654C20.2469 7.32907 20.2469 5.72807 19.2594 4.7406ZM17.5543 10.0217L13.9783 6.44574L4.14558 16.2785C4.05237 16.3717 4 16.4981 4 16.6299V19.503C4 19.7775 4.22253 20 4.49704 20H7.37005C7.50188 20 7.6283 19.9476 7.72151 19.8544L17.5543 10.0217Z" fill="rgba(0,0,0,0.3)"/></svg>');
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .color-input:hover::after {
+      opacity: 1;
+    }
+    .hex-input {
+      font-family: monospace;
+      font-size: 1em;
+      width: 60px;
+      padding: 4px 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      text-align: center;
     }
     .contrast-info {
-      margin-top: 10px;
-      font-size: 0.8em;
-      color: #666;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+      margin: 0 15px;
     }
-    .contrast-scenario {
-      margin-bottom: 10px;
-      padding: 8px;
-      background: #f8f8f8;
+    .contrast-preview {
+      display: flex;
+      gap: 8px;
+    }
+    .contrast-box {
+      width: 25px;
+      height: 25px;
       border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      position: relative;
     }
-    .scenario-title {
-      font-weight: 600;
-      margin-bottom: 5px;
-      color: #333;
+    .contrast-box:first-child {
+      background-color: var(--current-color);
+      color: #FFFFFF;
+    }
+    .contrast-box:last-child {
+      background-color: #FFFFFF;
+      border: 1px solid #ddd;
+    }
+    .contrast-box:last-child span {
+      color: var(--current-color);
+    }
+    .contrast-details {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9em;
     }
     .contrast-ratio {
-      margin-bottom: 5px;
+      font-family: monospace;
+      font-size: 0.9em;
+      font-weight: 600;
+      color: #333;
     }
     .wcag-status {
       display: flex;
@@ -211,11 +263,66 @@
     }
     .wcag-level {
       display: flex;
-      gap: 5px;
+      gap: 4px;
       align-items: center;
     }
     .status {
       font-weight: 600;
+    }
+    .mode-toggle {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      min-width: 80px;
+    }
+    .toggle-title {
+      font-size: 0.8em;
+      color: #666;
+      font-weight: 600;
+    }
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 20px;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 20px;
+    }
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    input:checked + .toggle-slider {
+      background-color: #000000;
+    }
+    input:checked + .toggle-slider:before {
+      transform: translateX(20px);
+    }
+    .toggle-label {
+      font-size: 0.8em;
+      color: #666;
     }
   </style>
 </head>
@@ -223,158 +330,270 @@
   <div class="header">
     <img src="icon48.png" alt="Birb Gogh Logo">
     <h2>Birb Gogh</h2>
+    <div class="header-quote" id="random-quote">I dream in hex codes, then color the page.</div>
   </div>
 
   <div class="main-content">
-    <div class="button-group">
-      <button class="apply-button" id="apply-colors">Apply Colors</button>
-      <button class="reset-button" id="refresh-colors">
-        <span class="reset-button-icon">↻</span>
-        <span>Go back to default colors</span>
-      </button>
-    </div>
-    
-    <h2>Birb Gogh</h2>
-    
-    <div class="section-title">Primary Colors</div>
-    <div class="color-grid">
+    <div class="color-group">
+      <div class="color-group-title">Primary Colors</div>
       <div class="color-item">
-        <label class="color-label">Primary</label>
-        <div class="color-display">
+        <div class="color-picker-section">
           <input type="color" id="primary-color" class="color-input" value="#00809D">
           <input type="text" class="hex-input" id="primary-hex" value="#00809D" maxlength="7">
-          <div class="contrast-info" id="primary-contrast">
-            <div class="contrast-ratio">Contrast Ratio: <span>0</span></div>
+          <label class="color-label">Primary</label>
+        </div>
+        <div class="contrast-info" id="primary-contrast">
+          <div class="contrast-preview">
+            <div class="contrast-box">A</div>
+            <div class="contrast-box"><span>A</span></div>
+          </div>
+          <div class="contrast-details">
+            <div class="contrast-ratio light-ratio">0</div>
+            <div class="contrast-ratio dark-ratio" style="display: none;">0</div>
             <div class="wcag-status">
               <div class="wcag-level">AA: <span class="status">-</span></div>
               <div class="wcag-level">AAA: <span class="status">-</span></div>
             </div>
           </div>
         </div>
+        <div class="mode-toggle">
+          <label class="toggle-switch">
+            <input type="checkbox" class="mode-switch">
+            <span class="toggle-slider"></span>
+          </label>
+          <span class="toggle-label">Flip Light/Dark</span>
+        </div>
       </div>
 
       <div class="color-item">
-        <label class="color-label">Primary Dark</label>
-        <div class="color-display">
+        <div class="color-picker-section">
           <input type="color" id="primary-dark-color" class="color-input" value="#024251">
           <input type="text" class="hex-input" id="primary-dark-hex" value="#024251" maxlength="7">
-          <div class="contrast-info" id="primary-dark-contrast">
-            <div class="contrast-ratio">Contrast Ratio: <span>0</span></div>
+          <label class="color-label">Primary Dark</label>
+        </div>
+        <div class="contrast-info" id="primary-dark-contrast">
+          <div class="contrast-preview">
+            <div class="contrast-box">A</div>
+            <div class="contrast-box"><span>A</span></div>
+          </div>
+          <div class="contrast-details">
+            <div class="contrast-ratio light-ratio">0</div>
+            <div class="contrast-ratio dark-ratio" style="display: none;">0</div>
             <div class="wcag-status">
               <div class="wcag-level">AA: <span class="status">-</span></div>
               <div class="wcag-level">AAA: <span class="status">-</span></div>
             </div>
           </div>
         </div>
+        <div class="mode-toggle">
+          <label class="toggle-switch">
+            <input type="checkbox" class="mode-switch">
+            <span class="toggle-slider"></span>
+          </label>
+          <span class="toggle-label">Flip Light/Dark</span>
+        </div>
       </div>
     </div>
 
-    <div class="section-title">CTA Colors</div>
-    <div class="color-grid">
+    <div class="color-group">
+      <div class="color-group-title">CTA Colors</div>
       <div class="color-item">
-        <label class="color-label">CTA</label>
-        <div class="color-display">
+        <div class="color-picker-section">
           <input type="color" id="cta-color" class="color-input" value="#ff6064">
           <input type="text" class="hex-input" id="cta-hex" value="#ff6064" maxlength="7">
-          <div class="contrast-info" id="cta-contrast">
-            <div class="contrast-ratio">Contrast Ratio: <span>0</span></div>
+          <label class="color-label">CTA</label>
+        </div>
+        <div class="contrast-info" id="cta-contrast">
+          <div class="contrast-preview">
+            <div class="contrast-box">A</div>
+            <div class="contrast-box"><span>A</span></div>
+          </div>
+          <div class="contrast-details">
+            <div class="contrast-ratio light-ratio">0</div>
+            <div class="contrast-ratio dark-ratio" style="display: none;">0</div>
             <div class="wcag-status">
               <div class="wcag-level">AA: <span class="status">-</span></div>
               <div class="wcag-level">AAA: <span class="status">-</span></div>
             </div>
           </div>
         </div>
+        <div class="mode-toggle">
+          <label class="toggle-switch">
+            <input type="checkbox" class="mode-switch">
+            <span class="toggle-slider"></span>
+          </label>
+          <span class="toggle-label">Flip Light/Dark</span>
+        </div>
       </div>
 
       <div class="color-item">
-        <label class="color-label">CTA Active</label>
-        <div class="color-display">
+        <div class="color-picker-section">
           <input type="color" id="cta-active-color" class="color-input" value="#ff3a3d">
           <input type="text" class="hex-input" id="cta-active-hex" value="#ff3a3d" maxlength="7">
-          <div class="contrast-info" id="cta-active-contrast">
-            <div class="contrast-ratio">Contrast Ratio: <span>0</span></div>
+          <label class="color-label">CTA Active</label>
+        </div>
+        <div class="contrast-info" id="cta-active-contrast">
+          <div class="contrast-preview">
+            <div class="contrast-box">A</div>
+            <div class="contrast-box"><span>A</span></div>
+          </div>
+          <div class="contrast-details">
+            <div class="contrast-ratio light-ratio">0</div>
+            <div class="contrast-ratio dark-ratio" style="display: none;">0</div>
             <div class="wcag-status">
               <div class="wcag-level">AA: <span class="status">-</span></div>
               <div class="wcag-level">AAA: <span class="status">-</span></div>
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="color-item">
-        <label class="color-label">CTA Hover</label>
-        <div class="color-display">
-          <input type="color" id="cta-hover-color" class="color-input" value="#024251">
-          <input type="text" class="hex-input" id="cta-hover-hex" value="#024251" maxlength="7">
-          <div class="contrast-info" id="cta-hover-contrast">
-            <div class="contrast-ratio">Contrast Ratio: <span>0</span></div>
-            <div class="wcag-status">
-              <div class="wcag-level">AA: <span class="status">-</span></div>
-              <div class="wcag-level">AAA: <span class="status">-</span></div>
-            </div>
-          </div>
+        <div class="mode-toggle">
+          <label class="toggle-switch">
+            <input type="checkbox" class="mode-switch">
+            <span class="toggle-slider"></span>
+          </label>
+          <span class="toggle-label">Flip Light/Dark</span>
         </div>
       </div>
 
       <div class="color-item">
-        <label class="color-label">CTA Text</label>
-        <div class="color-display">
+        <div class="color-picker-section">
           <input type="color" id="cta-text-color" class="color-input" value="#FFFFFF">
           <input type="text" class="hex-input" id="cta-text-hex" value="#FFFFFF" maxlength="7">
-          <div class="contrast-info" id="cta-text-contrast">
-            <div class="contrast-ratio">Contrast Ratio: <span>0</span></div>
+          <label class="color-label">CTA Text</label>
+        </div>
+        <div class="contrast-info" id="cta-text-contrast">
+          <div class="contrast-preview">
+            <div class="contrast-box">A</div>
+            <div class="contrast-box"><span>A</span></div>
+          </div>
+          <div class="contrast-details">
+            <div class="contrast-ratio light-ratio">0</div>
+            <div class="contrast-ratio dark-ratio" style="display: none;">0</div>
             <div class="wcag-status">
               <div class="wcag-level">AA: <span class="status">-</span></div>
               <div class="wcag-level">AAA: <span class="status">-</span></div>
             </div>
           </div>
+        </div>
+        <div class="mode-toggle">
+          <label class="toggle-switch">
+            <input type="checkbox" class="mode-switch">
+            <span class="toggle-slider"></span>
+          </label>
+          <span class="toggle-label">Dark</span>
         </div>
       </div>
     </div>
 
-    <div class="section-title">Status Colors</div>
-    <div class="color-grid">
+    <div class="color-group">
+      <div class="color-group-title">Status Colors</div>
       <div class="color-item">
-        <label class="color-label">Error</label>
-        <div class="color-display">
+        <div class="color-picker-section">
           <input type="color" id="error-color" class="color-input" value="#d73900">
           <input type="text" class="hex-input" id="error-hex" value="#d73900" maxlength="7">
-          <div class="contrast-info" id="error-contrast">
-            <div class="contrast-ratio">Contrast Ratio: <span>0</span></div>
+          <label class="color-label">Error</label>
+        </div>
+        <div class="contrast-info" id="error-contrast">
+          <div class="contrast-preview">
+            <div class="contrast-box">A</div>
+            <div class="contrast-box"><span>A</span></div>
+          </div>
+          <div class="contrast-details">
+            <div class="contrast-ratio light-ratio">0</div>
+            <div class="contrast-ratio dark-ratio" style="display: none;">0</div>
             <div class="wcag-status">
               <div class="wcag-level">AA: <span class="status">-</span></div>
               <div class="wcag-level">AAA: <span class="status">-</span></div>
             </div>
           </div>
         </div>
+        <div class="mode-toggle">
+          <label class="toggle-switch">
+            <input type="checkbox" class="mode-switch">
+            <span class="toggle-slider"></span>
+          </label>
+          <span class="toggle-label">Dark</span>
+        </div>
       </div>
 
       <div class="color-item">
-        <label class="color-label">Confirmation</label>
-        <div class="color-display">
+        <div class="color-picker-section">
           <input type="color" id="confirmation-green-color" class="color-input" value="#038600">
           <input type="text" class="hex-input" id="confirmation-green-hex" value="#038600" maxlength="7">
-          <div class="contrast-info" id="confirmation-green-contrast">
-            <div class="contrast-ratio">Contrast Ratio: <span>0</span></div>
+          <label class="color-label">Confirmation</label>
+        </div>
+        <div class="contrast-info" id="confirmation-green-contrast">
+          <div class="contrast-preview">
+            <div class="contrast-box">A</div>
+            <div class="contrast-box"><span>A</span></div>
+          </div>
+          <div class="contrast-details">
+            <div class="contrast-ratio light-ratio">0</div>
+            <div class="contrast-ratio dark-ratio" style="display: none;">0</div>
             <div class="wcag-status">
               <div class="wcag-level">AA: <span class="status">-</span></div>
               <div class="wcag-level">AAA: <span class="status">-</span></div>
             </div>
           </div>
+        </div>
+        <div class="mode-toggle">
+          <label class="toggle-switch">
+            <input type="checkbox" class="mode-switch">
+            <span class="toggle-slider"></span>
+          </label>
+          <span class="toggle-label">Dark</span>
         </div>
       </div>
     </div>
   </div>
 
   <div class="footer">
-    <a href="https://github.com/yourusername/birb-gogh#readme" target="_blank">
+    <a href="https://github.com/aburakaktas/birb-gogh#readme" target="_blank">
       <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor">
         <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
       </svg>
-      How to use?
+      Help
     </a>
+    <div class="footer-buttons">
+      <button class="reset-button" id="refresh-colors">
+        <span class="reset-button-icon">↻</span>
+        <span>Revert colors</span>
+      </button>
+      <button class="apply-button" id="apply-colors">Apply Colors</button>
+    </div>
   </div>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize color inputs
+      const colorInputs = document.querySelectorAll('.color-input');
+      colorInputs.forEach(input => {
+        input.addEventListener('input', function() {
+          const hexInput = document.getElementById(this.id.replace('-color', '-hex'));
+          if (hexInput) {
+            hexInput.value = this.value;
+          }
+        });
+      });
+
+      // Initialize hex inputs
+      const hexInputs = document.querySelectorAll('.hex-input');
+      hexInputs.forEach(input => {
+        input.addEventListener('input', function() {
+          let color = this.value.trim();
+          if (/^[0-9A-Fa-f]{6}$/.test(color)) {
+            color = '#' + color;
+          }
+          if (/^#[0-9A-Fa-f]{6}$/.test(color)) {
+            const colorInput = document.getElementById(this.id.replace('-hex', '-color'));
+            if (colorInput) {
+              colorInput.value = color;
+            }
+          }
+        });
+      });
+    });
+  </script>
   <script src="popup.js"></script>
 </body>
 </html> 

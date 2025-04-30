@@ -1,16 +1,14 @@
-console.log('popup.js loaded');
-
 // Original Holidu color values (these never change)
 const originalHoliduColors = {
   '--color-primary': '#00809D',
   '--color-primary-dark': '#024251',
   '--color-cta': '#ff6064',
   '--color-cta-active': '#ff3a3d',
-  '--color-cta-hover': '#024251',
   '--color-cta-text': '#FFFFFF',
   '--color-error': '#d73900',
   '--color-confirmation-green': '#038600',
-  '--color-confirmation-green-light': 'rgba(3, 134, 0, 0.1)'
+  '--color-confirmation-green-light': 'rgba(3, 134, 0, 0.1)',
+  '--color-black-text': '#2b2926'
 };
 
 // Map input IDs to CSS variable names
@@ -19,10 +17,10 @@ const variableMap = {
   'primary-dark-color': '--color-primary-dark',
   'cta-color': '--color-cta',
   'cta-active-color': '--color-cta-active',
-  'cta-hover-color': '--color-cta-hover',
   'cta-text-color': '--color-cta-text',
   'error-color': '--color-error',
-  'confirmation-green-color': '--color-confirmation-green'
+  'confirmation-green-color': '--color-confirmation-green',
+  'dark-mode-color': '--color-black-text'
 };
 
 // Color contrast calculation functions
@@ -75,8 +73,6 @@ function checkWCAGCompliance(contrastRatio, isLargeText = false) {
 
 // Function to update color in the website
 function updateColor(variable, value) {
-  console.log('Updating color:', variable, value);
-  
   // If this is the confirmation green color, also update the light version
   if (variable === '--color-confirmation-green') {
     const rgb = hexToRgb(value);
@@ -87,12 +83,7 @@ function updateColor(variable, value) {
   }
   
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    if (!tabs[0]) {
-      console.error('No active tab found');
-      return;
-    }
-    
-    console.log('Found active tab:', tabs[0].url);
+    if (!tabs[0]) return;
     
     chrome.tabs.sendMessage(tabs[0].id, {
       action: 'updateColor',
@@ -100,31 +91,18 @@ function updateColor(variable, value) {
       value: value
     }, function(response) {
       if (chrome.runtime.lastError) {
-        console.error('Error sending message:', chrome.runtime.lastError);
-        // Try to inject the content script if it's not already there
         chrome.scripting.executeScript({
           target: { tabId: tabs[0].id },
           files: ['content.js']
         }).then(() => {
-          console.log('Content script injected, retrying color update');
           updateColor(variable, value);
-        }).catch(err => {
-          console.error('Failed to inject content script:', err);
         });
-      } else {
-        console.log('Color update message sent successfully');
       }
     });
   });
 
   // Save color to storage
-  chrome.storage.sync.set({ [variable]: value }, function() {
-    if (chrome.runtime.lastError) {
-      console.error('Error saving to storage:', chrome.runtime.lastError);
-    } else {
-      console.log('Color saved to storage:', variable, value);
-    }
-  });
+  chrome.storage.sync.set({ [variable]: value });
 }
 
 // Function to update hex input and color picker
@@ -165,7 +143,6 @@ function handleColorPaste(input) {
 
 // Function to reset colors to original Holidu values
 function resetColors() {
-  console.log('Resetting colors to original values');
   Object.entries(originalHoliduColors).forEach(([variable, value]) => {
     const inputId = Object.entries(variableMap).find(([id, v]) => v === variable)?.[0];
     if (inputId) {
@@ -194,66 +171,134 @@ function applyAllColors() {
   });
 }
 
+// Function to update contrast info
 function updateContrastInfo(colorId, colorValue) {
-  console.log('Updating contrast for:', colorId, colorValue);
   const contrastInfo = document.getElementById(`${colorId}-contrast`);
-  if (!contrastInfo) {
-    console.error('Contrast info element not found for:', colorId);
-    return;
-  }
+  if (!contrastInfo) return;
 
   // Ensure color value is in correct format
   if (!colorValue.startsWith('#')) {
     colorValue = '#' + colorValue;
   }
   
-  // Calculate both contrast scenarios
-  const whiteTextOnColor = calculateContrastRatio('#FFFFFF', colorValue);
-  const colorTextOnWhite = calculateContrastRatio(colorValue, '#FFFFFF');
+  // Get the black text color
+  const blackTextColor = document.getElementById('dark-mode-color')?.value || '#2b2926';
   
-  console.log('Contrast ratios:', {
-    whiteTextOnColor,
-    colorTextOnWhite
-  });
+  // Calculate contrast with white and black text color
+  const whiteContrast = calculateContrastRatio('#FFFFFF', colorValue);
+  const blackContrast = calculateContrastRatio(blackTextColor, colorValue);
   
   // Get WCAG compliance for both scenarios
-  const whiteTextCompliance = checkWCAGCompliance(whiteTextOnColor);
-  const colorTextCompliance = checkWCAGCompliance(colorTextOnWhite);
+  const whiteCompliance = checkWCAGCompliance(whiteContrast);
+  const blackCompliance = checkWCAGCompliance(blackContrast);
   
-  // Update the UI with both scenarios
-  contrastInfo.innerHTML = `
-    <div class="contrast-scenario">
-      <div class="scenario-title">White text on ${colorId} background:</div>
-      <div class="contrast-ratio">Contrast Ratio: <span>${whiteTextOnColor.toFixed(2)}</span></div>
-      <div class="wcag-status">
-        <div class="wcag-level">AA: <span class="status">${whiteTextCompliance.AA.normal ? '✅' : '❌'}</span></div>
-        <div class="wcag-level">AAA: <span class="status">${whiteTextCompliance.AAA.normal ? '✅' : '❌'}</span></div>
-      </div>
-    </div>
-    <div class="contrast-scenario">
-      <div class="scenario-title">${colorId} text on white background:</div>
-      <div class="contrast-ratio">Contrast Ratio: <span>${colorTextOnWhite.toFixed(2)}</span></div>
-      <div class="wcag-status">
-        <div class="wcag-level">AA: <span class="status">${colorTextCompliance.AA.normal ? '✅' : '❌'}</span></div>
-        <div class="wcag-level">AAA: <span class="status">${colorTextCompliance.AAA.normal ? '✅' : '❌'}</span></div>
-      </div>
-    </div>
-  `;
+  // Update the contrast ratio displays
+  const lightRatio = contrastInfo.querySelector('.light-ratio');
+  const darkRatio = contrastInfo.querySelector('.dark-ratio');
+  if (lightRatio) lightRatio.textContent = whiteContrast.toFixed(2);
+  if (darkRatio) darkRatio.textContent = blackContrast.toFixed(2);
+  
+  // Update WCAG status
+  const wcagStatus = contrastInfo.querySelector('.wcag-status');
+  const modeToggle = contrastInfo.closest('.color-item').querySelector('.mode-switch');
+  const isDarkMode = modeToggle ? modeToggle.checked : false;
+  
+  // Update the preview boxes based on current mode
+  const previews = contrastInfo.querySelectorAll('.contrast-box');
+  if (previews.length >= 2) {
+    if (isDarkMode) {
+      // Dark mode: black text on primary + primary on black text
+      previews[0].innerHTML = '<span>A</span>';
+      previews[0].style.backgroundColor = colorValue;
+      previews[0].style.color = blackTextColor;
+      
+      previews[1].innerHTML = '<span>A</span>';
+      previews[1].style.backgroundColor = blackTextColor;
+      previews[1].style.color = colorValue;
+      
+      if (lightRatio) lightRatio.style.display = 'none';
+      if (darkRatio) darkRatio.style.display = 'block';
+      
+      if (wcagStatus) {
+        wcagStatus.innerHTML = `
+          <div class="wcag-level">AA: <span class="status">${blackCompliance.AA.normal ? '✅' : '❌'}</span></div>
+          <div class="wcag-level">AAA: <span class="status">${blackCompliance.AAA.normal ? '✅' : '❌'}</span></div>
+        `;
+      }
+    } else {
+      // Light mode: white on primary + primary on white
+      previews[0].innerHTML = 'A';
+      previews[0].style.backgroundColor = colorValue;
+      previews[0].style.color = '#FFFFFF';
+      
+      previews[1].innerHTML = '<span>A</span>';
+      previews[1].style.backgroundColor = '#FFFFFF';
+      previews[1].style.color = colorValue;
+      
+      if (lightRatio) lightRatio.style.display = 'block';
+      if (darkRatio) darkRatio.style.display = 'none';
+      
+      if (wcagStatus) {
+        wcagStatus.innerHTML = `
+          <div class="wcag-level">AA: <span class="status">${whiteCompliance.AA.normal ? '✅' : '❌'}</span></div>
+          <div class="wcag-level">AAA: <span class="status">${whiteCompliance.AAA.normal ? '✅' : '❌'}</span></div>
+        `;
+      }
+    }
+  }
+
+  // Update the CSS variable for the current color
+  contrastInfo.style.setProperty('--current-color', colorValue);
 }
+
+// Function to update all contrast displays
+function updateAllContrastDisplays() {
+  const colorInputs = document.querySelectorAll('.color-input');
+  colorInputs.forEach(input => {
+    // Skip the black text color input itself
+    if (input.id !== 'dark-mode-color') {
+      const colorId = input.id.replace('-color', '');
+      updateContrastInfo(colorId, input.value);
+    }
+  });
+}
+
+// Random quote selection
+const quotes = [
+  "I dream in hex codes, then color the page.",
+  "Designers be like: \"What if the button was just… a different blue?\"",
+  "Live, laugh, love… and tweak that error red again.",
+  "What would Holidu look like in peach?",
+  "Me: It's just a small color test.<br>Devs: 😨😨😨",
+  "One does not simply change the primary color.",
+  "Me: Just tweaking the success green.<br>Also me: Introduces brand-wide identity crisis.",
+  "CTA yellow felt cute, might revert later.",
+  "It looked good on my monitor…"
+];
+
+function setRandomQuote() {
+  const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+  document.getElementById('random-quote').innerHTML = randomQuote;
+}
+
+// Set initial quote
+setRandomQuote();
+
+// Listen for window focus changes
+chrome.windows.onFocusChanged.addListener((windowId) => {
+  if (windowId !== chrome.windows.WINDOW_ID_NONE) {
+    setRandomQuote();
+  }
+});
 
 // Initialize when the popup loads
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('DOM Content Loaded - Initializing popup');
-  
   // Initialize color inputs
   const colorInputs = document.querySelectorAll('.color-input');
-  console.log('Found color inputs:', colorInputs.length);
   
   colorInputs.forEach(input => {
-    console.log('Initializing color input:', input.id);
     handleColorPaste(input);
     input.addEventListener('input', function() {
-      console.log('Color input changed:', this.id, this.value);
       const hexInput = document.getElementById(this.id.replace('-color', '-hex'));
       if (hexInput) {
         hexInput.value = this.value;
@@ -262,20 +307,22 @@ document.addEventListener('DOMContentLoaded', function() {
       const variable = variableMap[this.id];
       if (variable) {
         updateColor(variable, this.value);
-        updateContrastInfo(this.id.replace('-color', ''), this.value);
+        // If this is the black text color, update all contrast displays
+        if (this.id === 'dark-mode-color') {
+          updateAllContrastDisplays();
+        } else {
+          updateContrastInfo(this.id.replace('-color', ''), this.value);
+        }
       }
     });
   });
 
   // Initialize hex inputs
   const hexInputs = document.querySelectorAll('.hex-input');
-  console.log('Found hex inputs:', hexInputs.length);
   
   hexInputs.forEach(input => {
-    console.log('Initializing hex input:', input.id);
     handleColorPaste(input);
     input.addEventListener('input', function() {
-      console.log('Hex input changed:', this.id, this.value);
       let color = this.value.trim();
       
       if (/^[0-9A-Fa-f]{6}$/.test(color)) {
@@ -286,6 +333,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const colorInput = document.getElementById(this.id.replace('-hex', '-color'));
         if (colorInput) {
           colorInput.value = color;
+          // If this is the black text color, update all contrast displays
+          if (this.id === 'dark-mode-hex') {
+            updateAllContrastDisplays();
+          }
           colorInput.dispatchEvent(new Event('input'));
         }
       }
@@ -293,27 +344,27 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // Initialize contrast information for all colors
-  console.log('Initializing contrast information');
   colorInputs.forEach(input => {
     const colorId = input.id.replace('-color', '');
-    console.log('Initializing contrast for:', colorId, input.value);
     updateContrastInfo(colorId, input.value);
   });
 
+  // Initialize mode toggles
+  document.querySelectorAll('.mode-switch').forEach(toggle => {
+    toggle.addEventListener('change', function() {
+      const colorItem = this.closest('.color-item');
+      const colorInput = colorItem.querySelector('.color-input');
+      const colorId = colorInput.id.replace('-color', '');
+      updateContrastInfo(colorId, colorInput.value);
+    });
+  });
+
   // Add button handlers
-  document.getElementById('refresh-colors').addEventListener('click', function() {
-    console.log('Reset button clicked');
-    resetColors();
-  });
-  
-  document.getElementById('apply-colors').addEventListener('click', function() {
-    console.log('Apply button clicked');
-    applyAllColors();
-  });
+  document.getElementById('refresh-colors').addEventListener('click', resetColors);
+  document.getElementById('apply-colors').addEventListener('click', applyAllColors);
 
   // Load saved colors
   chrome.storage.sync.get(Object.values(variableMap), function(result) {
-    console.log('Loading saved colors:', result);
     Object.entries(result).forEach(([variable, value]) => {
       const inputId = Object.entries(variableMap).find(([id, v]) => v === variable)?.[0];
       if (inputId) {
