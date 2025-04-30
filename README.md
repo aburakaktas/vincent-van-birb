@@ -1,8 +1,8 @@
-# Birb Gogh 🎨
+# Vincent van Birb 🎨
 
-*Designers be like: “What if the button was just… a different blue?”*
+*Designers be like: "What if the button was just… a different blue?"*
 
-![alt text](hero-image.png "Birb Gogh")
+![alt text](hero-image.png "Vincent van Birb")
 
 A Chrome extension for modifying website colors and checking contrast ratios in real-time.
 
@@ -20,7 +20,7 @@ A Chrome extension for modifying website colors and checking contrast ratios in 
    - Clone this repo
    - Go to `chrome://extensions/`
    - Enable "Developer mode"
-   - Click "Load unpacked" and select the `birb-gogh` directory
+   - Click "Load unpacked" and select the `vincent-van-birb` directory
 
 ## Usage
 
@@ -34,7 +34,7 @@ A Chrome extension for modifying website colors and checking contrast ratios in 
 
 ```bash
 # Build extension
-zip -r birb-gogh.zip manifest.json popup.html popup.js content.js icon16.png icon48.png icon128.png
+zip -r vincent-van-birb.zip manifest.json popup.html popup.js content.js icon16.png icon48.png icon128.png
 ```
 
 ## License

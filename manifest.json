@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Birb Gogh",
+  "name": "Vincent van Birb",
   "version": "1.0",
-  "description": "A tool to easily modify CSS color variables on websites",
+  "description": "A color picker and contrast checker for web developers",
   "icons": {
     "16": "icon16.png",
     "48": "icon48.png",
@@ -14,7 +14,12 @@
     "*://holidu.com/*"
   ],
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
   },
   "content_scripts": [
     {
