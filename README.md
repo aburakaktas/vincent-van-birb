@@ -1,5 +1,9 @@
 # Birb Gogh 🎨
 
+*Designers be like: “What if the button was just… a different blue?”*
+
+![alt text](hero-image.png "Birb Gogh")
+
 A Chrome extension for modifying website colors and checking contrast ratios in real-time.
 
 ## Features
@@ -11,7 +15,7 @@ A Chrome extension for modifying website colors and checking contrast ratios in 
 
 ## Installation
 
-1. Download the extension from the [Chrome Web Store](https://chrome.google.com/webstore)
+1. (pending approval) ~~Download the extension from the Chrome Web Store~~
 2. Or install manually:
    - Clone this repo
    - Go to `chrome://extensions/`
