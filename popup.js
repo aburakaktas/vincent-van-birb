@@ -1,5 +1,5 @@
-// Original Holidu color values (these never change)
-const originalHoliduColors = {
+// Original Holidu color values (these will be updated with server values)
+let originalHoliduColors = {
   '--color-primary': '#00809D',
   '--color-primary-dark': '#024251',
   '--color-cta': '#ff6064',
@@ -20,7 +20,16 @@ const variableMap = {
   'cta-text-color': '--color-cta-text',
   'error-color': '--color-error',
   'confirmation-green-color': '--color-confirmation-green',
-  'dark-mode-color': '--color-black-text'
+  'dark-mode-color': '--color-black-text',
+  // Add ferienwohnungen.de specific variables
+  'fw-primary-color': '--fw-primary',
+  'fw-primary-dark-color': '--fw-primary-dark',
+  'fw-cta-color': '--fw-cta',
+  'fw-cta-active-color': '--fw-cta-active',
+  'fw-cta-text-color': '--fw-cta-text',
+  'fw-error-color': '--fw-error',
+  'fw-success-color': '--fw-success',
+  'fw-success-light-color': '--fw-success-light'
 };
 
 // Color contrast calculation functions
@@ -73,6 +82,8 @@ function checkWCAGCompliance(contrastRatio, isLargeText = false) {
 
 // Function to update color in the website
 function updateColor(variable, value) {
+  console.log(`Updating color ${variable} to ${value}`);
+  
   // If this is the confirmation green color, also update the light version
   if (variable === '--color-confirmation-green') {
     const rgb = hexToRgb(value);
@@ -83,26 +94,43 @@ function updateColor(variable, value) {
   }
   
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    if (!tabs[0]) return;
+    if (!tabs[0]) {
+      console.log('No active tab found for color update');
+      return;
+    }
     
+    console.log('Sending updateColor message to content script');
     chrome.tabs.sendMessage(tabs[0].id, {
       action: 'updateColor',
       variable: variable,
       value: value
     }, function(response) {
       if (chrome.runtime.lastError) {
-        chrome.scripting.executeScript({
-          target: { tabId: tabs[0].id },
-          files: ['content.js']
-        }).then(() => {
+        console.log('Error sending message:', chrome.runtime.lastError);
+        // Instead of re-injecting the content script, just try to send the message again
+        setTimeout(() => {
           updateColor(variable, value);
-        });
+        }, 100);
+      } else {
+        console.log('Color update successful');
       }
     });
   });
 
   // Save color to storage
-  chrome.storage.sync.set({ [variable]: value });
+  const storageKey = getStorageKey();
+  console.log(`Saving color to storage with key ${storageKey}`);
+  chrome.storage.local.get([storageKey], (result) => {
+    const colors = result[storageKey] || {};
+    colors[variable] = value;
+    chrome.storage.local.set({ [storageKey]: colors }, function() {
+      if (chrome.runtime.lastError) {
+        console.log('Error saving color to storage:', chrome.runtime.lastError);
+      } else {
+        console.log('Color saved to storage successfully');
+      }
+    });
+  });
 }
 
 // Function to update hex input and color picker
@@ -141,23 +169,69 @@ function handleColorPaste(input) {
   });
 }
 
-// Function to reset colors to original Holidu values
+// Function to reset colors to original values
 function resetColors() {
-  Object.entries(originalHoliduColors).forEach(([variable, value]) => {
-    const inputId = Object.entries(variableMap).find(([id, v]) => v === variable)?.[0];
-    if (inputId) {
-      // Update the UI
-      const colorInput = document.getElementById(inputId);
-      const hexInput = document.getElementById(inputId.replace('-color', '-hex'));
-      if (colorInput && hexInput) {
-        colorInput.value = value;
-        hexInput.value = value;
-        // Update contrast information
-        updateContrastInfo(inputId.replace('-color', ''), value);
-      }
-      // Update the website
-      updateColor(variable, value);
+  console.log('Reset colors clicked');
+  
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    if (!tabs[0]) {
+      console.log('No active tab found');
+      return;
     }
+    
+    console.log('Getting original colors from page...');
+    // First get original colors from the page
+    chrome.tabs.sendMessage(tabs[0].id, {
+      action: 'getOriginalColors'
+    }, function(response) {
+      if (chrome.runtime.lastError) {
+        console.log('Error getting original colors:', chrome.runtime.lastError);
+        return;
+      }
+      
+      console.log('Received original colors:', response);
+      
+      if (response && response.colors) {
+        // Update original colors in storage
+        const storageKey = getStorageKey() + '_original';
+        console.log('Storing original colors with key:', storageKey);
+        
+        chrome.storage.local.set({ [storageKey]: response.colors }, function() {
+          if (chrome.runtime.lastError) {
+            console.log('Error storing original colors:', chrome.runtime.lastError);
+            return;
+          }
+          
+          console.log('Original colors stored, updating UI and website...');
+          
+          // Then update the UI and website with original colors
+          Object.entries(response.colors).forEach(([variable, value]) => {
+            console.log(`Updating ${variable} to ${value}`);
+            const inputId = Object.entries(variableMap).find(([id, v]) => v === variable)?.[0];
+            if (inputId) {
+              // Update the UI
+              const colorInput = document.getElementById(inputId);
+              const hexInput = document.getElementById(inputId.replace('-color', '-hex'));
+              if (colorInput && hexInput) {
+                console.log(`Updating inputs for ${inputId}`);
+                colorInput.value = value;
+                hexInput.value = value;
+                // Update contrast information
+                updateContrastInfo(inputId.replace('-color', ''), value);
+              } else {
+                console.log(`Could not find inputs for ${inputId}`);
+              }
+              // Update the website
+              updateColor(variable, value);
+            } else {
+              console.log(`No input ID found for variable ${variable}`);
+            }
+          });
+        });
+      } else {
+        console.log('No colors received from page');
+      }
+    });
   });
 }
 
@@ -291,8 +365,71 @@ chrome.windows.onFocusChanged.addListener((windowId) => {
   }
 });
 
+// Function to get the current domain
+function getCurrentDomain() {
+  return window.location.hostname;
+}
+
+// Function to get the storage key based on domain
+function getStorageKey() {
+  const domain = getCurrentDomain();
+  if (domain.includes('holidu.com')) {
+    return 'holidu_colors';
+  } else if (domain.includes('ferienwohnungen.de')) {
+    return 'ferienwohnungen_colors';
+  }
+  return 'holidu_colors'; // Default to holidu
+}
+
+// Function to load current colors from storage
+function loadCurrentColors() {
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    if (!tabs[0]) return;
+    
+    // First get original colors
+    chrome.tabs.sendMessage(tabs[0].id, {
+      action: 'getOriginalColors'
+    }, function(response) {
+      if (chrome.runtime.lastError) {
+        console.log('Error getting original colors:', chrome.runtime.lastError);
+        return;
+      }
+      
+      if (response && response.colors) {
+        // Update original colors with server values
+        const storageKey = getStorageKey() + '_original';
+        chrome.storage.local.set({ [storageKey]: response.colors });
+      }
+      
+      // Then get current colors
+      chrome.tabs.sendMessage(tabs[0].id, {
+        action: 'getCurrentColors',
+        variables: Object.values(variableMap)
+      }, function(response) {
+        if (chrome.runtime.lastError) {
+          console.log('Error getting current colors:', chrome.runtime.lastError);
+          return;
+        }
+        
+        if (response && response.colors) {
+          Object.entries(response.colors).forEach(([variable, value]) => {
+            const inputId = Object.entries(variableMap).find(([id, v]) => v === variable)?.[0];
+            if (inputId) {
+              updateColorInputs(inputId, value);
+              updateContrastInfo(inputId.replace('-color', ''), value);
+            }
+          });
+        }
+      });
+    });
+  });
+}
+
 // Initialize when the popup loads
 document.addEventListener('DOMContentLoaded', function() {
+  // Load current colors first
+  loadCurrentColors();
+
   // Initialize color inputs
   const colorInputs = document.querySelectorAll('.color-input');
   
@@ -362,15 +499,4 @@ document.addEventListener('DOMContentLoaded', function() {
   // Add button handlers
   document.getElementById('refresh-colors').addEventListener('click', resetColors);
   document.getElementById('apply-colors').addEventListener('click', applyAllColors);
-
-  // Load saved colors
-  chrome.storage.sync.get(Object.values(variableMap), function(result) {
-    Object.entries(result).forEach(([variable, value]) => {
-      const inputId = Object.entries(variableMap).find(([id, v]) => v === variable)?.[0];
-      if (inputId) {
-        updateColorInputs(inputId, value);
-        updateContrastInfo(inputId.replace('-color', ''), value);
-      }
-    });
-  });
 }); 

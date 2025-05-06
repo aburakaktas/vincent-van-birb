@@ -563,37 +563,6 @@
     </div>
   </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Initialize color inputs
-      const colorInputs = document.querySelectorAll('.color-input');
-      colorInputs.forEach(input => {
-        input.addEventListener('input', function() {
-          const hexInput = document.getElementById(this.id.replace('-color', '-hex'));
-          if (hexInput) {
-            hexInput.value = this.value;
-          }
-        });
-      });
-
-      // Initialize hex inputs
-      const hexInputs = document.querySelectorAll('.hex-input');
-      hexInputs.forEach(input => {
-        input.addEventListener('input', function() {
-          let color = this.value.trim();
-          if (/^[0-9A-Fa-f]{6}$/.test(color)) {
-            color = '#' + color;
-          }
-          if (/^#[0-9A-Fa-f]{6}$/.test(color)) {
-            const colorInput = document.getElementById(this.id.replace('-hex', '-color'));
-            if (colorInput) {
-              colorInput.value = color;
-            }
-          }
-        });
-      });
-    });
-  </script>
   <script src="popup.js"></script>
 </body>
 </html> 
