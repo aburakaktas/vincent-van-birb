@@ -2,6 +2,13 @@
 
 All notable changes to the Vincent van Birb extension will be documented in this file.
 
+## [1.3] - 2024-03-21
+
+### Changed
+- Removed redundant "Apply Colors" button for cleaner UI
+- Improved hex input paste handling with better CMD+V/Ctrl+V support
+- Enhanced keyboard input validation for hex fields
+
 ## [1.2] - 2024-03-21
 
 ### Added
