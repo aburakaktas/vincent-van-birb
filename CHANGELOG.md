@@ -2,6 +2,11 @@
 
 All notable changes to the Vincent van Birb extension will be documented in this file.
 
+## [1.3.1] - 2024-03-21
+
+### Fixed
+- Fixed incorrect labels in color items
+
 ## [1.3] - 2024-03-21
 
 ### Changed
