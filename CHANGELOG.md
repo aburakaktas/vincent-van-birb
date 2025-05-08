@@ -1,5 +1,18 @@
 # Changelog
 
+All notable changes to the Vincent van Birb extension will be documented in this file.
+
+## [1.2] - 2024-03-21
+
+### Added
+- Color persistence using cookies and local storage
+- Original color display and revert functionality
+- Support for all Holidu domain variations
+
+### Fixed
+- Content security policy configuration
+- Web accessible resources configuration
+
 ## [1.1] - 2024-03-21
 
 ### Changed
@@ -7,10 +20,6 @@
 - Updated manifest.json with improved icon specifications
 - Enhanced README with clearer installation instructions
 - Improved extension description
-
-### Fixed
-- Content security policy configuration
-- Web accessible resources configuration
 
 ## [1.0] - 2024-03-20
 
