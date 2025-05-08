@@ -147,26 +147,35 @@ function updateColorInputs(colorId, value) {
 // Function to handle color input paste
 function handleColorPaste(input) {
   input.addEventListener('paste', function(e) {
-    e.preventDefault();
     const pastedText = (e.clipboardData || window.clipboardData).getData('text');
     let color = pastedText.trim();
     
-    if (/^[0-9A-Fa-f]{6}$/.test(color)) {
-      color = '#' + color;
+    // Handle various hex code formats
+    if (color.startsWith('#')) {
+      color = color.substring(1);
     }
     
-    if (/^#[0-9A-Fa-f]{6}$/.test(color)) {
+    // If it's a valid 6-digit hex code
+    if (/^[0-9A-Fa-f]{6}$/.test(color)) {
+      e.preventDefault();
+      color = '#' + color;
       input.value = color;
       input.dispatchEvent(new Event('input'));
     }
   });
 
-  input.addEventListener('keydown', function(e) {
-    if ([8, 9, 13, 27, 46, 37, 38, 39, 40].indexOf(e.keyCode) !== -1) return;
-    if ((e.keyCode === 65 || e.keyCode === 67 || e.keyCode === 86 || e.keyCode === 88) && e.ctrlKey) return;
-    if (e.key === '#' || /^[0-9A-Fa-f]$/.test(e.key)) return;
-    e.preventDefault();
-  });
+  // Allow all keyboard input for hex fields
+  if (input.classList.contains('hex-input')) {
+    input.addEventListener('keydown', function(e) {
+      // Allow: backspace, delete, tab, escape, enter, arrows
+      if ([8, 9, 13, 27, 46, 37, 38, 39, 40].indexOf(e.keyCode) !== -1) return;
+      // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+      if ((e.keyCode === 65 || e.keyCode === 67 || e.keyCode === 86 || e.keyCode === 88) && (e.ctrlKey || e.metaKey)) return;
+      // Allow: # and hex characters
+      if (e.key === '#' || /^[0-9A-Fa-f]$/.test(e.key)) return;
+      e.preventDefault();
+    });
+  }
 }
 
 // Function to reset colors to original values
@@ -232,16 +241,6 @@ function resetColors() {
         console.log('No colors received from page');
       }
     });
-  });
-}
-
-// Function to apply all current colors
-function applyAllColors() {
-  Object.entries(variableMap).forEach(([inputId, variable]) => {
-    const colorInput = document.getElementById(inputId);
-    if (colorInput) {
-      updateColor(variable, colorInput.value);
-    }
   });
 }
 
@@ -498,5 +497,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Add button handlers
   document.getElementById('refresh-colors').addEventListener('click', resetColors);
-  document.getElementById('apply-colors').addEventListener('click', applyAllColors);
 }); 
