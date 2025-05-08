@@ -2,6 +2,11 @@
 
 All notable changes to the Vincent van Birb extension will be documented in this file.
 
+## [1.3.2] - 2024-03-21
+
+### Fixed
+- Fixed toggle labels to consistently show "Flip Light/Dark"
+
 ## [1.3.1] - 2024-03-21
 
 ### Fixed

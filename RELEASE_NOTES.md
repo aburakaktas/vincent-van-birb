@@ -1,5 +1,10 @@
 # Vincent van Birb - Release Notes
 
+## Version 1.3.2 (2024-03-21)
+
+### Bug Fixes
+- Fixed toggle labels to consistently show "Flip Light/Dark" across all color items
+
 ## Version 1.3.1 (2024-03-21)
 
 ### Bug Fixes
