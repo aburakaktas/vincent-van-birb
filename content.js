@@ -1,15 +1,9 @@
-console.log('Content script: Initializing...');
-
 // Create or get style element
 let styleElement = document.getElementById('color-variable-editor-style');
 if (!styleElement) {
-  console.log('Content script: Creating new style element');
   styleElement = document.createElement('style');
   styleElement.id = 'color-variable-editor-style';
-  // Insert at the very beginning of the head to ensure it's applied first
   document.head.insertBefore(styleElement, document.head.firstChild);
-} else {
-  console.log('Content script: Found existing style element');
 }
 
 // Initialize with empty rules if not already initialized
@@ -27,7 +21,6 @@ let originalColors = {};
 function saveColorsToCookie(colors, isOriginal = false) {
   const cookieName = isOriginal ? 'birb_gogh_original_colors' : 'birb_gogh_colors';
   document.cookie = `${cookieName}=${JSON.stringify(colors)}; path=/; max-age=31536000; SameSite=Lax`;
-  console.log(`Saved ${isOriginal ? 'original' : 'current'} colors to cookie:`, colors);
 }
 
 // Function to get colors from cookie
@@ -36,11 +29,9 @@ function getColorsFromCookie(isOriginal = false) {
   const cookie = document.cookie.split('; ').find(row => row.startsWith(cookieName + '='));
   if (cookie) {
     try {
-      const colors = JSON.parse(decodeURIComponent(cookie.split('=')[1]));
-      console.log(`Loaded ${isOriginal ? 'original' : 'current'} colors from cookie:`, colors);
-      return colors;
+      return JSON.parse(decodeURIComponent(cookie.split('=')[1]));
     } catch (e) {
-      console.error(`Error parsing ${isOriginal ? 'original' : 'current'} colors from cookie:`, e);
+      return null;
     }
   }
   return null;
@@ -48,12 +39,9 @@ function getColorsFromCookie(isOriginal = false) {
 
 // Function to capture original colors from server
 function captureOriginalColors() {
-  console.log('Capturing original colors...');
-  
   // First try to get original colors from cookie
   const cookieColors = getColorsFromCookie(true);
   if (cookieColors && Object.keys(cookieColors).length > 0) {
-    console.log('Found original colors in cookie, using those');
     originalColors = cookieColors;
     return originalColors;
   }
@@ -67,7 +55,6 @@ function captureOriginalColors() {
       cssVariables[prop] = allStyles.getPropertyValue(prop).trim();
     }
   }
-  console.log('Available CSS variables:', cssVariables);
 
   const variables = [
     '--color-primary',
@@ -95,21 +82,12 @@ function captureOriginalColors() {
       const value = getComputedStyle(document.documentElement).getPropertyValue(variable).trim();
       if (value) {
         originalColors[variable] = value;
-        console.log(`Found original color for ${variable}:`, value);
       }
     });
     
     // Store original colors in storage and cookie
     const storageKey = getStorageKey() + '_original';
-    chrome.storage.local.set({ [storageKey]: originalColors }, function() {
-      if (chrome.runtime.lastError) {
-        console.error('Error storing original colors:', chrome.runtime.lastError);
-      } else {
-        console.log('Successfully stored original colors in storage:', originalColors);
-      }
-    });
-    
-    // Also save to cookie
+    chrome.storage.local.set({ [storageKey]: originalColors });
     saveColorsToCookie(originalColors, true);
   }
   
@@ -117,7 +95,6 @@ function captureOriginalColors() {
 }
 
 // Capture original colors immediately
-console.log('Capturing original colors immediately...');
 captureOriginalColors();
 
 // Function to get current color values from the website
@@ -196,8 +173,6 @@ function applySavedColors() {
 function saveColors(colors) {
   const storageKey = getStorageKey();
   chrome.storage.local.set({ [storageKey]: colors });
-  
-  // Also save to cookie
   saveColorsToCookie(colors, false);
 }
 
@@ -226,36 +201,25 @@ function loadColorsFromCookie() {
 
 // Listen for messages from the popup
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  console.log('Content script received message:', request);
-  
   if (request.action === 'updateColor') {
-    console.log('Updating color:', request.variable, request.value);
     updateColor(request.variable, request.value);
-    // Save all current colors from cache
     saveColors(colorCache);
     sendResponse({ success: true });
   } else if (request.action === 'getCurrentColors') {
-    console.log('Getting current colors for variables:', request.variables);
     const colors = getCurrentColors(request.variables);
-    console.log('Sending current colors:', colors);
     sendResponse({ colors: colors });
   } else if (request.action === 'getOriginalColors') {
-    console.log('Getting original colors');
-    console.log('Sending original colors:', originalColors);
     sendResponse({ colors: originalColors });
   }
   
-  // Return true to indicate we will send a response asynchronously
   return true;
 });
 
 // Also capture colors when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('DOM Content Loaded, ensuring original colors are captured...');
   if (Object.keys(originalColors).length === 0) {
     captureOriginalColors();
   }
-  // Then load any saved colors
   loadColorsFromCookie();
 });
 
@@ -277,7 +241,6 @@ let lastUrl = location.href;
 new MutationObserver(() => {
   if (location.href !== lastUrl) {
     lastUrl = location.href;
-    // Capture original colors on navigation
     setTimeout(() => {
       captureOriginalColors();
       applySavedColors();
