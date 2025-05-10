@@ -1,5 +1,10 @@
 # Vincent van Birb - Release Notes
 
+## Version 1.3.3 (2024-03-21)
+
+### Security
+- Removed unused 'scripting' permission to comply with Chrome Web Store requirements
+
 ## Version 1.3.2 (2024-03-21)
 
 ### Bug Fixes
