@@ -1,11 +1,26 @@
 # Changelog
 
-All notable changes to the Vincent van Birb extension will be documented in this file.
+All notable changes to the "Vincent van Birb" extension will be documented in this file.
 
-## [1.3.3] - 2024-03-21
+## [1.3.4] - 2024-03-21
+### Changed
+- Removed unnecessary "cookies" permission from manifest
+- Removed unused `originalHoliduColors` object
+- Cleaned up debugging code and console logs
+- Fixed Chrome Web Store compliance issues
 
-### Security
-- Removed unused 'scripting' permission to comply with Chrome Web Store requirements
+## [1.3.3] - 2024-03-20
+### Added
+- Support for all Holidu domains
+- Support for ferienwohnungen.de
+- Color persistence across tabs
+- Original color backup and restoration
+- Cookie-based backup of original colors
+
+### Fixed
+- Fixed feedback loop causing flickering
+- Fixed color changes only being stored per tab
+- Fixed recursion bug in cookie loading logic
 
 ## [1.3.2] - 2024-03-21
 

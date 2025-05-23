@@ -1,4 +1,33 @@
-# Vincent van Birb - Release Notes
+# Release Notes
+
+## Version 1.3.4 (Hotfix) - March 21, 2024
+
+### Overview
+This hotfix release addresses Chrome Web Store compliance issues and improves code cleanliness. No functional changes to the extension's behavior.
+
+### Changes
+- Removed unnecessary "cookies" permission from manifest
+- Removed unused `originalHoliduColors` object
+- Cleaned up debugging code and console logs
+- Fixed Chrome Web Store compliance issues
+
+### Technical Details
+- The extension now only requests the "storage" permission, which is required for saving color preferences
+- Cookie functionality remains unchanged as it uses `document.cookie` in content scripts
+- No functional changes to the extension's behavior
+
+### Features (Unchanged)
+- Color picking and customization
+- Original color backup and restoration
+- Cross-tab persistence
+- Support for all Holidu domains and ferienwohnungen.de
+
+### Known Issues
+None
+
+### System Requirements
+- Chrome 88 or later
+- Access to Holidu domains or ferienwohnungen.de
 
 ## Version 1.3.3 (2024-03-21)
 
